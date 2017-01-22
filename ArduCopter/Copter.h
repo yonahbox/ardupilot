@@ -145,6 +145,9 @@ public:
     void loop() override;
 
 private:
+    // ADDED BY SRIRAM: rpm as sent from mavlink
+    float mavlink_rpm;
+
     // key aircraft parameters passed to multiple libraries
     AP_Vehicle::MultiCopter aparm;
 
@@ -290,7 +293,7 @@ private:
 
     // altitude below which we do no navigation in auto takeoff
     float auto_takeoff_no_nav_alt_cm;
-    
+
     RCMapper rcmap;
 
     // board specific config
@@ -551,8 +554,8 @@ private:
     AP_Rally_Copter rally;
 #endif
 
-    // RSSI 
-    AP_RSSI rssi;      
+    // RSSI
+    AP_RSSI rssi;
 
     // Crop Sprayer
 #if SPRAYER == ENABLED
@@ -602,7 +605,7 @@ private:
 
     // last valid RC input time
     uint32_t last_radio_update_ms;
-    
+
     // Top-level logic
     // setup the var_info table
     AP_Param param_loader;

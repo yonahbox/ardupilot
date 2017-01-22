@@ -23,7 +23,7 @@ const AP_HAL::HAL& hal = AP_HAL::get_HAL();
 Copter::Copter(void) :
     DataFlash{FIRMWARE_STRING},
     flight_modes(&g.flight_mode1),
-    mission(ahrs, 
+    mission(ahrs,
             FUNCTOR_BIND_MEMBER(&Copter::start_command, bool, const AP_Mission::Mission_Command &),
             FUNCTOR_BIND_MEMBER(&Copter::verify_command_callback, bool, const AP_Mission::Mission_Command &),
             FUNCTOR_BIND_MEMBER(&Copter::exit_mission, void)),
@@ -33,6 +33,8 @@ Copter::Copter(void) :
 #else
     motors(MAIN_LOOP_RATE),
 #endif
+    // ADDED BY SRIRAM - for mavlink RPM input
+    mavlink_rpm(0),
     scaleLongDown(1),
     wp_bearing(0),
     home_bearing(0),
