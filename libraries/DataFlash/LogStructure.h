@@ -854,16 +854,6 @@ struct PACKED log_EcotronsEFI {
     float    intake_manifold_temperature;
     float    coolant_temperature;        
     float    battery_voltage;            
-    /*
-    double    ignition_timing0;           
-    double    ignition_timing1;          
-    double    ignition_timing2;           
-    double    ignition_timing3;           
-    double    injection_timing0;          
-    double    injection_timing1;          
-    double    injection_timing2;          
-    double    injection_timing3;      
-    */    
 };
 
 struct PACKED log_EcotronsEFI2 {
