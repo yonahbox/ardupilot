@@ -2348,6 +2348,7 @@ void DataFlash_Class::Log_Write_EcotronsEFI(AP_EcotronsEFI& efis)
     struct log_EcotronsEFI2 pkt_ecotronsefi2 = {
         LOG_PACKET_HEADER_INIT(LOG_ECOTRONSEFI2_MSG),
         time_us                     : AP_HAL::micros64(),
+        health                      : AP_EcotronsEFI::is_healthy(*first_efi_state),
         ignition_timing0            : first_efi_state->ignition_timing_crank_angle[0],
         ignition_timing1            : first_efi_state->ignition_timing_crank_angle[1],
         ignition_timing2            : first_efi_state->ignition_timing_crank_angle[2],
