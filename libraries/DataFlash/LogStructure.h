@@ -828,21 +828,12 @@ struct PACKED log_EcotronsEFI {
     float    intake_manifold_temperature;
     float    coolant_temperature;        
     float    battery_voltage;            
-    /*
-    double    ignition_timing0;           
-    double    ignition_timing1;          
-    double    ignition_timing2;           
-    double    ignition_timing3;           
-    double    injection_timing0;          
-    double    injection_timing1;          
-    double    injection_timing2;          
-    double    injection_timing3;      
-    */    
 };
 
 struct PACKED log_EcotronsEFI2 {
     LOG_PACKET_HEADER;
-    uint64_t  time_us;
+    uint64_t time_us;
+    bool     health;
     float    ignition_timing0;           
     float    ignition_timing1;          
     float    ignition_timing2;           
@@ -896,8 +887,8 @@ struct PACKED log_EcotronsEFI2 {
 #define ECOT_LABELS "TimeUS,LP,RPM,FL,FF,Load,TPS,EOS,CErr,SDT,BaroP,MP,MT,ECT,Volt"
 #define ECOT_FMT    "QBfffffBBffffff" 
 
-#define ECOT2_LABELS "TimeUS,IgnT0,IgnT1,IgnT2,IgnT3,IT0,IT1,IT2,IT3"
-#define ECOT2_FMT    "Qffffffff"
+#define ECOT2_LABELS "TimeUS,Healthy,IgnT0,IgnT1,IgnT2,IgnT3,IT0,IT1,IT2,IT3"
+#define ECOT2_FMT    "QBffffffff"
 /*
 Format characters in the format string for binary log messages
   b   : int8_t
