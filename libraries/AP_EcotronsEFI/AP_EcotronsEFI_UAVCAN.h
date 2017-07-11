@@ -16,8 +16,10 @@
 
 #include "AP_EcotronsEFI.h"
 #include "AP_EcotronsEFI_Backend.h"
-#include <AP_UAVCAN/AP_UAVCAN.h>
 
+#if HAL_WITH_UAVCAN
+
+#include <AP_UAVCAN/AP_UAVCAN.h>
 
 class AP_EcotronsEFI_UAVCAN: public AP_EcotronsEFI_Backend {
 public:
@@ -33,3 +35,5 @@ public:
     // UAVCAN callback, called from AP_UAVCAN.cpp
     void handle_efi_msg(const EFI_State& message_efi_state);
 };
+
+#endif

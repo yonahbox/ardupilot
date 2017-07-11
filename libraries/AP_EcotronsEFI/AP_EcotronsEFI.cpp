@@ -83,9 +83,11 @@ void AP_EcotronsEFI::init()
     // Otherwise, initialize backends as required
     for (uint8_t i = 0; i < EFI_MAX_INSTANCES; i++) {
         if (_type[i] == EcotronsEFI_COMMUNICATION_TYPE_UAVCAN) {
+#if HAL_WITH_UAVCAN
             hal.console->printf("AP_EcotronsEFI: Starting UAVCAN backend\n");
             _backends[_backend_count] = new AP_EcotronsEFI_UAVCAN(_state[_backend_count], _uavcan_node_id[_backend_count]);
             _backend_count++;
+#endif
         } else if (_type[i] == EcotronsEFI_COMMUNICATION_TYPE_SERIAL) {
             // TODO: not supported yet
         }
