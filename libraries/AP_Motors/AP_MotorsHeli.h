@@ -10,6 +10,7 @@
 #include <SRV_Channel/SRV_Channel.h>
 #include "AP_Motors_Class.h"
 #include "AP_MotorsHeli_RSC.h"
+#include <AC_PID/AC_PI_2D.h>
 
 // servo output rates
 #define AP_MOTORS_HELI_SPEED_DEFAULT            125     // default servo update rate for helicopters
@@ -41,6 +42,15 @@
 // flybar types
 #define AP_MOTORS_HELI_NOFLYBAR                 0
 
+// Governor default PI values
+#define AP_MOTORS_GOV_P_DEFAULT                 0.1f
+#define AP_MOTORS_GOV_I_DEFAULT                 0.1f
+#define AP_MOTORS_GOV_IMAX_DEFAULT              0.5f
+#define AP_MOTORS_GOV_FILT_HZ_DEFAULT           20.0f
+
+// Governor defaults
+#define AP_MOTORS_HELI_RSC_GOV_RPM_SETPOINT     1800
+
 class AP_HeliControls;
 
 /// @class      AP_MotorsHeli
@@ -50,7 +60,9 @@ public:
     /// Constructor
     AP_MotorsHeli( uint16_t         loop_rate,
                    uint16_t         speed_hz = AP_MOTORS_HELI_SPEED_DEFAULT) :
-        AP_Motors(loop_rate, speed_hz)
+        AP_Motors(loop_rate, speed_hz),
+        _pi_rotor_gov(AP_MOTORS_GOV_P_DEFAULT, AP_MOTORS_GOV_I_DEFAULT, 
+        AP_MOTORS_GOV_IMAX_DEFAULT, AP_MOTORS_GOV_FILT_HZ_DEFAULT, loop_rate)
     {
         AP_Param::setup_object_defaults(this, var_info);
 
@@ -130,6 +142,12 @@ public:
 
     float get_throttle_hover() const { return 0.5f; }
 
+     // get_gov_rpm_setpoint - gets contents of _rsc_gov_rpm_setpoint parameter in RPM
+    int16_t get_gov_rpm_setpoint() const { return _rsc_gov_rpm_setpoint; }
+ 
+    // set_governor_enable - enables vehicle code to enable/disabled closed loop rotor speed governor, set target speed and pass in rotor speed feedback
+    virtual void set_rsc_governor_enabled(bool enabled, int16_t desired_rpm, float rpm) {};
+
     // var_info for holding Parameter information
     static const struct AP_Param::GroupInfo var_info[];
 
@@ -205,6 +223,10 @@ protected:
     AP_Int16        _rsc_power_negc;            // throttle value sent to throttle servo at full negative collective pitch
     AP_Int16        _rsc_slewrate;              // throttle slew rate (percentage per second)
     AP_Int8         _servo_test;                // sets number of cycles to test servo movement on bootup
+
+    AC_PI_2D        _pi_rotor_gov;              // PI control for the rotor governor
+    AP_Int16        _rsc_gov_rpm_setpoint;      // rotor speed controller governor RPM setpoint
+    
 
     // internal variables
     float           _collective_mid_pct = 0.0f;      // collective mid parameter value converted to 0 ~ 1 range

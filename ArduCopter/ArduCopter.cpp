@@ -518,6 +518,11 @@ void Copter::one_hz_loop()
     // indicates that the sensor or subsystem is present but not
     // functioning correctly
     update_sensor_status_flags();
+
+#if FRAME_CONFIG == HELI_FRAME
+        // check if we are using governor enable on an aux switch
+        set_using_governor_switch(check_if_auxsw_mode_used(AUXSW_HELI_GOV_ENABLE));
+#endif
 }
 
 // called at 50hz
