@@ -4,6 +4,7 @@
 #include <AP_Math/AP_Math.h>            // ArduPilot Mega Vector/Matrix math Library
 #include <RC_Channel/RC_Channel.h>
 #include <SRV_Channel/SRV_Channel.h>
+#include <AC_PID/AC_PI_2D.h>
 
 // rotor controller states
 enum RotorControlState {
@@ -18,7 +19,8 @@ enum RotorControlMode {
     ROTOR_CONTROL_MODE_SPEED_PASSTHROUGH,
     ROTOR_CONTROL_MODE_SPEED_SETPOINT,
     ROTOR_CONTROL_MODE_OPEN_LOOP_POWER_OUTPUT,
-    ROTOR_CONTROL_MODE_CLOSED_LOOP_POWER_OUTPUT
+    ROTOR_CONTROL_MODE_CLOSED_LOOP_POWER_OUTPUT,
+    ROTOR_CONTROL_MODE_GOVERNOR
 };
 
 class AP_MotorsHeli_RSC {
@@ -27,9 +29,10 @@ public:
     friend class AP_MotorsHeli_Dual;
     
     AP_MotorsHeli_RSC(SRV_Channel::Aux_servo_function_t aux_fn,
-                      uint8_t default_channel) :
+                      uint8_t default_channel, AC_PI_2D *pi_rotor_gov = NULL) :
         _aux_fn(aux_fn),
-        _default_channel(default_channel)
+        _default_channel(default_channel),
+        _pi_rotor_gov(pi_rotor_gov)
     {};
 
     // init_servo - servo initialization on start-up
@@ -101,6 +104,12 @@ private:
     float           _power_output_negc = 0.0f;  // setpoint for power output at full negative collective
     uint16_t        _power_slewrate = 0;        // slewrate for throttle (percentage per second)
     float           _load_feedforward = 0.0f;   // estimate of motor load, range 0-1.0f
+
+    // governor variables
+    bool            _gov_enabled = false;       // status of speed governor
+    int16_t         _governor_rpm_setpoint = 0; // governor rpm setpoint when rotor is engaged
+    float           _rpm_feedback = 0;          // latest speed feedback from external tachometer sensor
+    AC_PI_2D       *_pi_rotor_gov;              // optional pointer to external PID object for speed governor
 
     AP_Int16        _pwm_min;
     AP_Int16        _pwm_max;

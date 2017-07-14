@@ -77,7 +77,7 @@ const AP_Param::GroupInfo AP_MotorsHeli::var_info[] = {
     // @Param: RSC_MODE
     // @DisplayName: Rotor Speed Control Mode
     // @Description: Determines the method of rotor speed control
-    // @Values: 1:Ch8 Input, 2:SetPoint, 3:Throttle Curve
+    // @Values: 1:Ch8 Input, 2:SetPoint, 3:Throttle Curve, 4:Closed Loop, 5:Governor
     // @User: Standard
     AP_GROUPINFO("RSC_MODE", 8, AP_MotorsHeli, _rsc_mode, (int8_t)ROTOR_CONTROL_MODE_SPEED_PASSTHROUGH),
 
@@ -171,6 +171,48 @@ const AP_Param::GroupInfo AP_MotorsHeli::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("RSC_SLEWRATE", 19, AP_MotorsHeli, _rsc_slewrate, 0),
     
+
+    // @Param: RSC_GOV_P
+    // @DisplayName: Rotor Speed Governor P Gain
+    // @Description: Rotor speed governor P gain.  Converts the difference between desired RPM and actual RPM into a power output
+    // @Range: 0.08 0.30
+    // @Increment: 0.005
+    // @User: Standard
+
+    // @Param: RSC_GOV_I
+    // @DisplayName: Rotor Speed Governor I Gain
+    // @Description: Rotor speed governor I gain.  Corrects long-term difference in desired RPM vs actual RPM
+    // @Range: 0.01 0.5
+    // @Increment: 0.01
+    // @User: Standard
+
+    // @Param: RSC_GOV_IMAX
+    // @DisplayName: Rotor Speed Governor I Gain Maximum
+    // @Description: Rotor speed governor I gain maximum.  Constrains the maximum power that the I gain will output
+    // @Range: 0 1000
+    // @Increment: 10
+    // @Units: Percent*10
+    // @User: Standard
+
+    // @Param: RSC_GOV_FILT_HZ
+    // @DisplayName: Rotor Speed Governor input filter frequency in Hz
+    // @Description: Rotor Speed Governor input filter frequency in Hz. 
+    // @Range: 1 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+    AP_SUBGROUPINFO(_pi_rotor_gov, "RSC_GV_", 20, AP_MotorsHeli, AC_PI_2D),
+
+    // @Param: RSC_GOV_RPM
+    // @DisplayName: Rotor Speed Controller Governor RPM Setpoint
+    // @Description: Target RPM for internal rotor speed governor when motor is engaged
+    // @Range: 500 20000
+    // @Units: RPM
+    // @Increment: 10
+    // @User: Standard
+    AP_GROUPINFO("RSC_GOV_RPM", 21, AP_MotorsHeli, _rsc_gov_rpm_setpoint, AP_MOTORS_HELI_RSC_GOV_RPM_SETPOINT),
+
+
     AP_GROUPEND
 };
 
@@ -342,7 +384,7 @@ bool AP_MotorsHeli::parameter_check(bool display_msg) const
     }
 
     // returns false if RSC Mode is not set to a valid control mode
-    if (_rsc_mode <= (int8_t)ROTOR_CONTROL_MODE_DISABLED || _rsc_mode > (int8_t)ROTOR_CONTROL_MODE_CLOSED_LOOP_POWER_OUTPUT) {
+    if (_rsc_mode <= (int8_t)ROTOR_CONTROL_MODE_DISABLED || _rsc_mode > (int8_t)ROTOR_CONTROL_MODE_GOVERNOR) {
         if (display_msg) {
             GCS_MAVLINK::send_statustext_all(MAV_SEVERITY_CRITICAL, "PreArm: H_RSC_MODE invalid");
         }

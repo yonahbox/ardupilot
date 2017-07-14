@@ -47,7 +47,7 @@ public:
     AP_MotorsHeli_Dual(uint16_t loop_rate,
                        uint16_t speed_hz = AP_MOTORS_HELI_SPEED_DEFAULT) :
         AP_MotorsHeli(loop_rate, speed_hz),
-        _rotor(SRV_Channel::k_heli_rsc, AP_MOTORS_HELI_DUAL_RSC)
+        _rotor(SRV_Channel::k_heli_rsc, AP_MOTORS_HELI_DUAL_RSC, &_pi_rotor_gov)
     {
         AP_Param::setup_object_defaults(this, var_info);
     };
