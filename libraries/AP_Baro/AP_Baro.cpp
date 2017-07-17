@@ -474,7 +474,7 @@ void AP_Baro::init(void)
 #endif
     }
     
-#if HAL_WITH_UAVCAN
+#if 0// HAL_WITH_UAVCAN
     // If there is place left - allocate one UAVCAN based baro
     if ((AP_BoardConfig::get_can_enable() != 0) && (hal.can_mgr != nullptr))
     {
