@@ -47,7 +47,7 @@ public:
     AP_MotorsHeli_Dual(uint16_t loop_rate,
                        uint16_t speed_hz = AP_MOTORS_HELI_SPEED_DEFAULT) :
         AP_MotorsHeli(loop_rate, speed_hz),
-        _rotor(SRV_Channel::k_heli_rsc, AP_MOTORS_HELI_DUAL_RSC, &_pi_rotor_gov)
+        _rotor(SRV_Channel::k_heli_rsc, AP_MOTORS_HELI_DUAL_RSC, &_pid_rotor_gov)
     {
         AP_Param::setup_object_defaults(this, var_info);
     };
@@ -91,6 +91,9 @@ public:
 
     // servo_test - move servos through full range of movement
     void servo_test() override;
+
+    // set_governor_enable - enables vehicle code to enable/disabled closed loop rotor speed governor and pass in rotor speed feedback
+    void set_rsc_governor_enabled(bool enabled, int16_t desired_rpm, float rpm) { _rotor.set_gov_enable(enabled, desired_rpm, rpm); }
 
     // var_info for holding Parameter information
     static const struct AP_Param::GroupInfo var_info[];

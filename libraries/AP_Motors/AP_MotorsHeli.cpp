@@ -186,6 +186,13 @@ const AP_Param::GroupInfo AP_MotorsHeli::var_info[] = {
     // @Increment: 0.01
     // @User: Standard
 
+    // @Param: H_RSC_GOV_D
+    // @DisplayName: Rotor Speed Governor D Gain
+    // @Description: Rotor speed governor D gain.  Compensates for sudden change in desired RPM vs actual RPM
+    // @Range: 0.001 0.02
+    // @Increment: 0.001
+    // @User: Standard
+
     // @Param: RSC_GOV_IMAX
     // @DisplayName: Rotor Speed Governor I Gain Maximum
     // @Description: Rotor speed governor I gain maximum.  Constrains the maximum power that the I gain will output
@@ -201,7 +208,7 @@ const AP_Param::GroupInfo AP_MotorsHeli::var_info[] = {
     // @Increment: 1
     // @Units: Hz
     // @User: Standard
-    AP_SUBGROUPINFO(_pi_rotor_gov, "RSC_GV_", 20, AP_MotorsHeli, AC_PI_2D),
+    AP_SUBGROUPINFO(_pid_rotor_gov, "RSC_GV_", 20, AP_MotorsHeli, AC_PID_NDF),
 
     // @Param: RSC_GOV_RPM
     // @DisplayName: Rotor Speed Controller Governor RPM Setpoint

@@ -48,7 +48,7 @@ public:
     AP_MotorsHeli_Single(uint16_t       loop_rate,
                          uint16_t       speed_hz = AP_MOTORS_HELI_SPEED_DEFAULT) :
         AP_MotorsHeli(loop_rate, speed_hz),
-        _main_rotor(SRV_Channel::k_heli_rsc, AP_MOTORS_HELI_SINGLE_RSC, &_pi_rotor_gov),
+        _main_rotor(SRV_Channel::k_heli_rsc, AP_MOTORS_HELI_SINGLE_RSC, &_pid_rotor_gov),
         _tail_rotor(SRV_Channel::k_heli_tail_rsc, AP_MOTORS_HELI_SINGLE_AUX)
     {
         AP_Param::setup_object_defaults(this, var_info);
@@ -100,7 +100,10 @@ public:
 
     // parameter_check - returns true if helicopter specific parameters are sensible, used for pre-arm check
     bool parameter_check(bool display_msg) const override;
-    
+
+    // set_governor_enable - enables vehicle code to enable/disabled closed loop rotor speed governor and pass in rotor speed feedback
+    void set_rsc_governor_enabled(bool enabled, int16_t desired_rpm, float rpm) { _main_rotor.set_gov_enable(enabled, desired_rpm, rpm); }
+
     // var_info
     static const struct AP_Param::GroupInfo var_info[];
 
