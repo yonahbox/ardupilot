@@ -4,7 +4,7 @@
 #include <AP_Math/AP_Math.h>            // ArduPilot Mega Vector/Matrix math Library
 #include <RC_Channel/RC_Channel.h>
 #include <SRV_Channel/SRV_Channel.h>
-#include <AC_PID/AC_PI_2D.h>
+#include <AC_PID/AC_PID_NDF.h>
 
 // rotor controller states
 enum RotorControlState {
@@ -29,10 +29,10 @@ public:
     friend class AP_MotorsHeli_Dual;
     
     AP_MotorsHeli_RSC(SRV_Channel::Aux_servo_function_t aux_fn,
-                      uint8_t default_channel, AC_PI_2D *pi_rotor_gov = NULL) :
+                      uint8_t default_channel, AC_PID_NDF *pid_rotor_gov = NULL) :
         _aux_fn(aux_fn),
         _default_channel(default_channel),
-        _pi_rotor_gov(pi_rotor_gov)
+        _pid_rotor_gov(pid_rotor_gov)
     {};
 
     // init_servo - servo initialization on start-up
@@ -81,6 +81,9 @@ public:
     // output - update value to send to ESC/Servo
     void        output(RotorControlState state);
 
+    // set_gov_enable
+    void        set_gov_enable(bool enabled, int16_t rpm, float rpm_feedback);
+
 private:
     uint64_t        _last_update_us;
     
@@ -109,7 +112,7 @@ private:
     bool            _gov_enabled = false;       // status of speed governor
     int16_t         _governor_rpm_setpoint = 0; // governor rpm setpoint when rotor is engaged
     float           _rpm_feedback = 0;          // latest speed feedback from external tachometer sensor
-    AC_PI_2D       *_pi_rotor_gov;              // optional pointer to external PID object for speed governor
+    AC_PID_NDF       *_pid_rotor_gov;              // optional pointer to external PID object for speed governor
 
     AP_Int16        _pwm_min;
     AP_Int16        _pwm_max;
@@ -123,4 +126,10 @@ private:
 
     // write_rsc - outputs pwm onto output rsc channel. servo_out parameter is of the range 0 ~ 1
     void            write_rsc(float servo_out);
+
+    // calc_open_loop_power_control_output - calculates control output for use in open loop mode, or as feedforward for closed loop mode
+    float calc_open_loop_power_control_output();
+
+    // calc_closed_loop_power_control_output - calculates control output for closed loop mode
+    float calc_closed_loop_power_control_output();
 };

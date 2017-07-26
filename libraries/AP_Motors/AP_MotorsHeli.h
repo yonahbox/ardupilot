@@ -10,7 +10,7 @@
 #include <SRV_Channel/SRV_Channel.h>
 #include "AP_Motors_Class.h"
 #include "AP_MotorsHeli_RSC.h"
-#include <AC_PID/AC_PI_2D.h>
+#include <AC_PID/AC_PID_NDF.h>
 
 // servo output rates
 #define AP_MOTORS_HELI_SPEED_DEFAULT            125     // default servo update rate for helicopters
@@ -44,7 +44,8 @@
 
 // Governor default PI values
 #define AP_MOTORS_GOV_P_DEFAULT                 0.1f
-#define AP_MOTORS_GOV_I_DEFAULT                 0.1f
+#define AP_MOTORS_GOV_I_DEFAULT                 0.0f
+#define AP_MOTORS_GOV_D_DEFAULT                 0.0f
 #define AP_MOTORS_GOV_IMAX_DEFAULT              0.5f
 #define AP_MOTORS_GOV_FILT_HZ_DEFAULT           20.0f
 
@@ -61,7 +62,7 @@ public:
     AP_MotorsHeli( uint16_t         loop_rate,
                    uint16_t         speed_hz = AP_MOTORS_HELI_SPEED_DEFAULT) :
         AP_Motors(loop_rate, speed_hz),
-        _pi_rotor_gov(AP_MOTORS_GOV_P_DEFAULT, AP_MOTORS_GOV_I_DEFAULT, 
+        _pid_rotor_gov(AP_MOTORS_GOV_P_DEFAULT, AP_MOTORS_GOV_I_DEFAULT, AP_MOTORS_GOV_D_DEFAULT,
         AP_MOTORS_GOV_IMAX_DEFAULT, AP_MOTORS_GOV_FILT_HZ_DEFAULT, loop_rate)
     {
         AP_Param::setup_object_defaults(this, var_info);
@@ -224,7 +225,7 @@ protected:
     AP_Int16        _rsc_slewrate;              // throttle slew rate (percentage per second)
     AP_Int8         _servo_test;                // sets number of cycles to test servo movement on bootup
 
-    AC_PI_2D        _pi_rotor_gov;              // PI control for the rotor governor
+    AC_PID_NDF        _pid_rotor_gov;              // PI control for the rotor governor
     AP_Int16        _rsc_gov_rpm_setpoint;      // rotor speed controller governor RPM setpoint
     
 
