@@ -598,6 +598,8 @@ void Copter::do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
         case AUXSW_HELI_GOV_ENABLE:
             switch (ch_flag) {
                 case AUX_SWITCH_HIGH:
+
+                    GCS_MAVLINK::send_statustext_all(MAV_SEVERITY_INFO, "Heli governor enabled");
                     heli_flags.governor_enable = true;
                     break;
                 case AUX_SWITCH_LOW:

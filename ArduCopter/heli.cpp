@@ -170,11 +170,15 @@ void Copter::heli_update_rotor_speed_targets()
             if (rsc_control_deglitched > 0.0f) {
                 ap.motor_interlock_switch = true;
                 if ((rpm_sensor.get_rpm(0) > 0) && ((heli_flags.using_governor_switch && heli_flags.governor_enable) || !heli_flags.using_governor_switch)){
+                    hal.console->printf("RSC governor enabled, setpoint = %d, rpm sensor 0 rpm = %f\n", motors->get_gov_rpm_setpoint(), rpm_sensor.get_rpm(0));
                     motors->set_rsc_governor_enabled(true, motors->get_gov_rpm_setpoint(), rpm_sensor.get_rpm(0));
                 } else {
+                    hal.console->printf("RSC governor disabled, setpoint = %d, rpm sensor 0 rpm = %f\n", motors->get_gov_rpm_setpoint(), rpm_sensor.get_rpm(0));
                     motors->set_rsc_governor_enabled(false, motors->get_gov_rpm_setpoint(), rpm_sensor.get_rpm(0));
                 }
             }else{
+
+                hal.console->printf("RSC governor disabled - interlock\n");
                 ap.motor_interlock_switch = false;
                 motors->set_rsc_governor_enabled(false, 0, 0);
             }
