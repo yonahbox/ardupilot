@@ -53,6 +53,9 @@ bool AP_RangeFinder_LightWareSerial::get_reading(uint16_t &reading_cm)
         return false;
     }
 
+    // Get scaling data from parameters
+    float scaling = ranger._scaling[state.instance];
+
     // read any available lines from the lidar
     float sum = 0;
     uint16_t count = 0;
@@ -79,7 +82,7 @@ bool AP_RangeFinder_LightWareSerial::get_reading(uint16_t &reading_cm)
     if (count == 0) {
         return false;
     }
-    reading_cm = 100 * sum / count;
+    reading_cm = 100 * sum / count * scaling;
     return true;
 }
 
