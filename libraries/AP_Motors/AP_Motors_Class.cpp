@@ -166,9 +166,9 @@ int16_t AP_Motors::calc_pwm_output_1to1(float input, const SRV_Channel *servo)
     }
 
     if (input >= 0.0f) {
-        ret = ((input * (servo->get_output_max() - servo->get_trim())) + servo->get_trim());
+        ret = (((input * (servo->get_output_max() - servo->get_trim())) + servo->get_trim()) + servo->get_offset_pwm());
     } else {
-        ret = ((input * (servo->get_trim() - servo->get_output_min())) + servo->get_trim());
+        ret = (((input * (servo->get_trim() - servo->get_output_min())) + servo->get_trim()) + servo->get_offset_pwm());
     }
 
     return constrain_int16(ret, servo->get_output_min(), servo->get_output_max());

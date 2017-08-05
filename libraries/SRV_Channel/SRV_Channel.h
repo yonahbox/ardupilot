@@ -137,6 +137,9 @@ public:
         return reversed?true:false;
     }
 
+    // get 
+    uint16_t get_offset_pwm(void) const { return offset; }
+
     // set MIN/MAX parameters
     void set_output_min(uint16_t pwm) {
         servo_min.set(pwm);
@@ -162,6 +165,7 @@ private:
     AP_Int16 servo_trim;
     // reversal, following convention that 1 means reversed, 0 means normal
     AP_Int8 reversed;
+    AP_Int8 offset;
     AP_Int8 function;
 
     // a pending output value as PWM
