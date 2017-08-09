@@ -72,7 +72,7 @@ void AP_MotorsHeli_RSC::output(RotorControlState state)
             // set main rotor ramp to increase to full speed
             update_rotor_ramp(1.0f, dt);
 
-            if ((_control_mode == ROTOR_CONTROL_MODE_SPEED_PASSTHROUGH) || (_control_mode == ROTOR_CONTROL_MODE_SPEED_SETPOINT)) {
+            if ((_control_mode == ROTOR_CONTROL_MODE_SPEED_PASSTHROUGH) || (_control_mode == ROTOR_CONTROL_MODE_SPEED_SETPOINT) ) {
                 // set control rotor speed to ramp slewed value between idle and desired speed
                 _control_output = _idle_output + (_rotor_ramp_output * (_desired_speed - _idle_output));
             } else if (_control_mode == ROTOR_CONTROL_MODE_OPEN_LOOP_POWER_OUTPUT) {
@@ -80,9 +80,16 @@ void AP_MotorsHeli_RSC::output(RotorControlState state)
                 // is for the left side of the V-curve (-ve collective) A positive load is for the right side (+ve collective)
                _control_output = calc_open_loop_power_control_output();
             } else if (_control_mode == ROTOR_CONTROL_MODE_GOVERNOR) {
-                // throttle output based on closed-loop control using PID.
-               _control_output = calc_closed_loop_power_control_output();
-              }
+                if (!_gov_enabled) {
+                    // Governor is not enabled - we should just passthrough the desired value
+                    _control_output = _idle_output + (_rotor_ramp_output * (_desired_speed - _idle_output));
+                    hal.console->printf("Governor disabled: desired speed = %f, control output = %f\n", _desired_speed, _control_output);
+                } else {
+                    // throttle output based on closed-loop control using PID.
+                    _control_output = calc_closed_loop_power_control_output();
+                }
+
+            }
             break;
     }
 
@@ -126,10 +133,10 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
     float target_rpm;            // target rpm is ramped
 
     target_rpm = _rotor_ramp_output * _governor_rpm_setpoint;
-    float pid_input = (target_rpm - _rpm_feedback) / 10000.0f;
+    float pid_input = (target_rpm - _rpm_feedback) / 100.0f;
 
     if (_gov_enabled){
-        _pid_rotor_gov->set_input_filter_all(target_rpm - _rpm_feedback);
+        _pid_rotor_gov->set_input_filter_all(pid_input/*target_rpm - _rpm_feedback*/);
         pid_output = _pid_rotor_gov->get_pid();
     } else {
         _pid_rotor_gov->set_input_filter_all(0);
@@ -141,7 +148,7 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
     float open_loop_output = calc_open_loop_power_control_output();
 
 
-    hal.console->printf("Setpoint = %d, Target RPM: %f, ACTUAL: %f, Ramp = %f, Open Loop: %f, PID output: %f (%f %f %f)\n", _governor_rpm_setpoint, 
+    /*hal.console->printf("Setpoint = %d, Target RPM: %f, ACTUAL: %f, Ramp = %f, Open Loop: %f, PID output: %f (%f %f %f)\n", _governor_rpm_setpoint, 
     target_rpm, 
     _rpm_feedback, 
     _rotor_ramp_output, 
@@ -151,6 +158,7 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
     _pid_rotor_gov->get_i(),
     _pid_rotor_gov->get_d()
     );
+    */
     
     // total control output is sum of basic open loop control output plus PI contribution
     return /*open_loop_output +*/ pid_output;

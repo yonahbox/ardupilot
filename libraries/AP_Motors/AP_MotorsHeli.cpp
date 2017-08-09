@@ -217,7 +217,7 @@ const AP_Param::GroupInfo AP_MotorsHeli::var_info[] = {
     // @Units: RPM
     // @Increment: 10
     // @User: Standard
-    AP_GROUPINFO("RSC_GOV_RPM", 21, AP_MotorsHeli, _rsc_gov_rpm_setpoint, AP_MOTORS_HELI_RSC_GOV_RPM_SETPOINT),
+    AP_GROUPINFO("RSC_GV_RPM", 21, AP_MotorsHeli, _rsc_gov_rpm_setpoint, AP_MOTORS_HELI_RSC_GOV_RPM_SETPOINT),
 
 
     AP_GROUPEND
