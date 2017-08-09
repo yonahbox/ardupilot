@@ -135,6 +135,7 @@ void Copter::heli_update_rotor_speed_targets()
 {
 
     static bool rotor_runup_complete_last = false;
+    static bool status_sent = false;
 
     // get rotor control method
     uint8_t rsc_control_mode = motors->get_rsc_mode();
@@ -166,6 +167,22 @@ void Copter::heli_update_rotor_speed_targets()
             }
             break;
          case ROTOR_CONTROL_MODE_GOVERNOR:
+            // Ensure that we have not exceeded maximum RPM
+            // If we have - we need to shut down the engine
+            if (rpm_sensor.enabled(0) && rpm_sensor.healthy(0) && rpm_sensor.should_cutoff(0)) {
+
+                if (!status_sent) {
+                    // Send status updates to GCS - but just once per cutoff
+                    GCS_MAVLINK::send_statustext_all(MAV_SEVERITY_CRITICAL, "Engine Over-RPM Cutoff!\n");
+                    hal.console->printf("Engine Over-RPM CUTOFF!!!\n"); 
+                    status_sent = true;
+                }
+                // Turn off the ignition relay (assumption of relay 0 controlling ignition)
+                relay.off(0);
+            } else {
+                status_sent = false;
+            }
+
             // pass setpoint through as desired rotor speed
             if (rsc_control_deglitched > 0.0f) {
                 ap.motor_interlock_switch = true;

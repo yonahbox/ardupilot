@@ -63,6 +63,13 @@ const AP_Param::GroupInfo AP_RPM::var_info[] = {
     // @Values: -1:Disabled,50:PixhawkAUX1,51:PixhawkAUX2,52:PixhawkAUX3,53:PixhawkAUX4,54:PixhawkAUX5,55:PixhawkAUX6
     // @User: Standard
     AP_GROUPINFO("_PIN",    5, AP_RPM, _pin[0], 54),
+
+    // @Param: _CUTOFF
+    // @DisplayName: RPM Cutoff value
+    // @Description: The RPM at which certain engine/motor cutoff actions should be taken
+    // @Increment: 1
+    // @User: Standard
+    AP_GROUPINFO("_CUTOFF",  6, AP_RPM, _cutoff[0], 5500),
     
 #if RPM_MAX_INSTANCES > 1
     // @Param: 2_TYPE

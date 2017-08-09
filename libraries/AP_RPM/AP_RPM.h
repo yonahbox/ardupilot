@@ -53,6 +53,7 @@ public:
     AP_Float _maximum[RPM_MAX_INSTANCES];
     AP_Float _minimum[RPM_MAX_INSTANCES];
     AP_Float _quality_min[RPM_MAX_INSTANCES];
+    AP_Float _cutoff[RPM_MAX_INSTANCES];
 
     static const struct AP_Param::GroupInfo var_info[];
     
@@ -87,6 +88,10 @@ public:
     bool healthy(uint8_t instance) const;
 
     bool enabled(uint8_t instance) const;
+
+    bool should_cutoff(uint8_t instance) const {
+        return state[instance].rate_rpm >= _cutoff[instance];
+    }
 
 private:
     RPM_State state[RPM_MAX_INSTANCES];
