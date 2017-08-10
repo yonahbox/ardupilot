@@ -17,6 +17,7 @@
 #include "RPM_PX4_PWM.h"
 #include "RPM_Pin.h"
 #include "RPM_SITL.h"
+#include "RPM_External.h"
 
 extern const AP_HAL::HAL& hal;
 
@@ -25,7 +26,7 @@ const AP_Param::GroupInfo AP_RPM::var_info[] = {
     // @Param: _TYPE
     // @DisplayName: RPM type
     // @Description: What type of RPM sensor is connected
-    // @Values: 0:None,1:PX4-PWM,2:AUXPIN
+    // @Values: 0:None,1:PX4-PWM,2:AUXPIN,99:External
     // @User: Standard
     AP_GROUPINFO("_TYPE",    0, AP_RPM, _type[0], 0),
 
@@ -75,7 +76,7 @@ const AP_Param::GroupInfo AP_RPM::var_info[] = {
     // @Param: 2_TYPE
     // @DisplayName: Second RPM type
     // @Description: What type of RPM sensor is connected
-    // @Values: 0:None,1:PX4-PWM,2:AUXPIN,99:
+    // @Values: 0:None,1:PX4-PWM,2:AUXPIN
     // @User: Advanced
     AP_GROUPINFO("2_TYPE",    10, AP_RPM, _type[1], 0),
 
@@ -134,6 +135,18 @@ void AP_RPM::init(void)
         state[instance].instance = instance;
         drivers[instance] = new AP_RPM_SITL(*this, instance, state[instance]);
 #endif
+        // Create external RPM 
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
+        uint8_t type = _type[num_instances];
+#endif
+        if (type == RPM_TYPE_EXTERNAL) {
+
+            state[instance].instance = instance;
+            drivers[instance] = new AP_RPM_External(*this, instance, state[instance]);
+        }
+
+
         if (drivers[i] != nullptr) {
             // we loaded a driver for this instance, so it must be
             // present (although it may not be healthy)

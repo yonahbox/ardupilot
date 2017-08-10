@@ -35,7 +35,8 @@ public:
     enum RPM_Type {
         RPM_TYPE_NONE    = 0,
         RPM_TYPE_PX4_PWM = 1,
-        RPM_TYPE_PIN     = 2
+        RPM_TYPE_PIN     = 2,
+        RPM_TYPE_EXTERNAL= 99
     };
 
     // The RPM_State structure is filled in by the backend driver
@@ -97,6 +98,11 @@ public:
 
         // Check if our current RPM exceeds the cutoff
         return state[instance].rate_rpm >= _cutoff[instance];
+    }
+
+    // Update the RPM of an instance from the outside
+    void external_rpm_update(uint8_t instance, float rpm) {
+        state[instance].rate_rpm = rpm;
     }
 
 private:
