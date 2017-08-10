@@ -66,16 +66,16 @@ const AP_Param::GroupInfo AP_RPM::var_info[] = {
 
     // @Param: _CUTOFF
     // @DisplayName: RPM Cutoff value
-    // @Description: The RPM at which certain engine/motor cutoff actions should be taken
+    // @Description: The RPM at which certain engine/motor cutoff actions should be taken. Set to -1 to disable.
     // @Increment: 1
     // @User: Standard
-    AP_GROUPINFO("_CUTOFF",  6, AP_RPM, _cutoff[0], 5500),
+    AP_GROUPINFO("_CUTOFF",  6, AP_RPM, _cutoff[0], 6000),
     
 #if RPM_MAX_INSTANCES > 1
     // @Param: 2_TYPE
     // @DisplayName: Second RPM type
     // @Description: What type of RPM sensor is connected
-    // @Values: 0:None,1:PX4-PWM,2:AUXPIN
+    // @Values: 0:None,1:PX4-PWM,2:AUXPIN,99:
     // @User: Advanced
     AP_GROUPINFO("2_TYPE",    10, AP_RPM, _type[1], 0),
 

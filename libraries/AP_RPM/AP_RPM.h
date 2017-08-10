@@ -90,6 +90,12 @@ public:
     bool enabled(uint8_t instance) const;
 
     bool should_cutoff(uint8_t instance) const {
+        // If the sensor itself is not healthy, or we disabled the cutoff - ignore request
+        if (!healthy(instance) || _cutoff[instance] == -1) {
+            return false;
+        }
+
+        // Check if our current RPM exceeds the cutoff
         return state[instance].rate_rpm >= _cutoff[instance];
     }
 
