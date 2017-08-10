@@ -102,7 +102,15 @@ void Copter::rpm_update(void)
  */
 void Copter::ecotronsEFI_update(void)
 {
+    // Update all backends
     ecotrons_efi.update();
+
+    // Update first RPM sensor with first ecotrons instance data
+    EFI_State* state = ecotrons_efi.get_state(0);
+    if (state != nullptr && rpm_sensor.enabled(0)) {
+        rpm_sensor.external_rpm_update(0, state->rpm);
+    }
+
     if (should_log(MASK_LOG_RCIN)) {
         DataFlash.Log_Write_EcotronsEFI(ecotrons_efi);
     }

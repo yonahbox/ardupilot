@@ -92,7 +92,7 @@ public:
 
     bool should_cutoff(uint8_t instance) const {
         // If the sensor itself is not healthy, or we disabled the cutoff - ignore request
-        if (!healthy(instance) || _cutoff[instance] == -1) {
+        if (!enabled(instance) || !healthy(instance) || _cutoff[instance] == -1) {
             return false;
         }
 
@@ -102,7 +102,10 @@ public:
 
     // Update the RPM of an instance from the outside
     void external_rpm_update(uint8_t instance, float rpm) {
-        state[instance].rate_rpm = rpm;
+        // Only update if the instance is an external RPM type
+        if (enabled(instance) && healthy(instance) && (_type[instance] == RPM_TYPE_EXTERNAL)) {
+            state[instance].rate_rpm = rpm;
+        }
     }
 
 private:
