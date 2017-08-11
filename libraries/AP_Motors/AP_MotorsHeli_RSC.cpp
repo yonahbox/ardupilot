@@ -87,9 +87,11 @@ void AP_MotorsHeli_RSC::output(RotorControlState state)
                 } else if (fabs(_governor_rpm_setpoint - _rpm_feedback) < _governor_rpm_deadband) {
                     // We are within the RPM deadband - no control action to be taken
                     _control_output = last_control_output;
+                    _flag_governor_limit_pwm = true;
                 } else {
                     // throttle output based on closed-loop control using PID.
                     _control_output = calc_closed_loop_power_control_output();
+                    _flag_governor_limit_pwm = true;
                 }
 
             }
@@ -270,6 +272,13 @@ void AP_MotorsHeli_RSC::write_rsc(float servo_out)
         } else {
             pwm = _pwm_max - pwm;
         }
+
+        // This flag indicates that we need to limit this PWM to the governor limits
+        if (_flag_governor_limit_pwm) {
+            pwm = constrain_int16(pwm, _pwm_gv_min, _pwm_gv_max);
+            _flag_governor_limit_pwm = false;
+        }
+
         SRV_Channels::set_output_pwm(_aux_fn, pwm);
     }
 }

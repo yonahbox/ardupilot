@@ -118,6 +118,11 @@ private:
     AP_Int16        _pwm_min;
     AP_Int16        _pwm_max;
     AP_Int8         _pwm_rev;
+
+    AP_Int16        _pwm_gv_min;
+    AP_Int16        _pwm_gv_max;
+
+    bool            _flag_governor_limit_pwm = false; // indicates if we have to limit the output PWM
     
     // update_rotor_ramp - slews rotor output scalar between 0 and 1, outputs float scalar to _rotor_ramp_output
     void            update_rotor_ramp(float rotor_ramp_input, float dt);

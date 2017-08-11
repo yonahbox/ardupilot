@@ -136,6 +136,20 @@ const AP_Param::GroupInfo AP_MotorsHeli_Single::var_info[] = {
     // @Values: -1:Reversed,1:Normal
     // @User: Standard
     AP_GROUPINFO("RSC_PWM_REV", 18, AP_MotorsHeli_Single, _main_rotor._pwm_rev, 1),
+
+    // @Param: RSC_PWM_GV_MIN
+    // @DisplayName: RSC PWM output miniumum under governor control
+    // @Description: This sets the PWM output on RSC channel for maximum rotor speed under governor control
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_PWM_GV_MIN", 19, AP_MotorsHeli_Single, _main_rotor._pwm_gv_min, 1000),
+
+    // @Param: RSC_PWM_GV_MAX
+    // @DisplayName: RSC PWM output maxiumum under governor control
+    // @Description: This sets the PWM output on RSC channel for miniumum rotor speed under governor control
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_PWM_GV_MAX", 20, AP_MotorsHeli_Single, _main_rotor._pwm_gv_max, 2000),
     
     // parameters up to and including 29 are reserved for tradheli
 

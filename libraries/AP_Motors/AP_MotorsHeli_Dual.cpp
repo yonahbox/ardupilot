@@ -173,6 +173,20 @@ const AP_Param::GroupInfo AP_MotorsHeli_Dual::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("COL2_MID", 18, AP_MotorsHeli_Dual, _collective2_mid, AP_MOTORS_HELI_DUAL_COLLECTIVE2_MID),
 
+    // @Param: RSC_PWM_GV_MIN
+    // @DisplayName: RSC PWM output miniumum under governor control
+    // @Description: This sets the PWM output on RSC channel for maximum rotor speed under governor control
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_PWM_GV_MIN", 19, AP_MotorsHeli_Dual, _rotor._pwm_gv_min, 1000),
+
+    // @Param: RSC_PWM_GV_MAX
+    // @DisplayName: RSC PWM output maxiumum under governor control
+    // @Description: This sets the PWM output on RSC channel for miniumum rotor speed under governor control
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_PWM_GV_MAX", 20, AP_MotorsHeli_Dual, _rotor._pwm_gv_max, 2000),
+
     AP_GROUPEND
 };
 
