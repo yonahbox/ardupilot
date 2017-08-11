@@ -82,7 +82,7 @@ public:
     void        output(RotorControlState state);
 
     // set_gov_enable
-    void        set_gov_enable(bool enabled, int16_t rpm, float rpm_feedback);
+    void        set_gov_enable(bool enabled, int16_t rpm, int16_t deadband, float rpm_feedback);
 
 private:
     uint64_t        _last_update_us;
@@ -111,6 +111,7 @@ private:
     // governor variables
     bool            _gov_enabled = false;       // status of speed governor
     int16_t         _governor_rpm_setpoint = 0; // governor rpm setpoint when rotor is engaged
+    int16_t         _governor_rpm_deadband = 0; // governor rpm deadband
     float           _rpm_feedback = 0;          // latest speed feedback from external tachometer sensor
     AC_PID_NDF       *_pid_rotor_gov;              // optional pointer to external PID object for speed governor
 

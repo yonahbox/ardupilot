@@ -93,7 +93,7 @@ public:
     void servo_test() override;
 
     // set_governor_enable - enables vehicle code to enable/disabled closed loop rotor speed governor and pass in rotor speed feedback
-    void set_rsc_governor_enabled(bool enabled, int16_t desired_rpm, float rpm) { _rotor.set_gov_enable(enabled, desired_rpm, rpm); }
+    void set_rsc_governor_enabled(bool enabled, int16_t desired_rpm, int16_t deadband, float rpm) { _rotor.set_gov_enable(enabled, desired_rpm, deadband, rpm); }
 
     // var_info for holding Parameter information
     static const struct AP_Param::GroupInfo var_info[];

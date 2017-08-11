@@ -145,9 +145,12 @@ public:
 
      // get_gov_rpm_setpoint - gets contents of _rsc_gov_rpm_setpoint parameter in RPM
     int16_t get_gov_rpm_setpoint() const { return _rsc_gov_rpm_setpoint; }
+
+     // get_gov_rpm_deadband - gets contents of _rsc_gov_rpm_db parameter in RPM
+    int16_t get_gov_rpm_deadband() const { return _rsc_gov_rpm_db; }
  
     // set_governor_enable - enables vehicle code to enable/disabled closed loop rotor speed governor, set target speed and pass in rotor speed feedback
-    virtual void set_rsc_governor_enabled(bool enabled, int16_t desired_rpm, float rpm) {};
+    virtual void set_rsc_governor_enabled(bool enabled, int16_t desired_rpm, int16_t rpm_deadband, float rpm) {};
 
     // var_info for holding Parameter information
     static const struct AP_Param::GroupInfo var_info[];
@@ -227,6 +230,7 @@ protected:
 
     AC_PID_NDF        _pid_rotor_gov;              // PI control for the rotor governor
     AP_Int16        _rsc_gov_rpm_setpoint;      // rotor speed controller governor RPM setpoint
+    AP_Int16        _rsc_gov_rpm_db;            // rotor speed controller governor RPM deadband
     
 
     // internal variables

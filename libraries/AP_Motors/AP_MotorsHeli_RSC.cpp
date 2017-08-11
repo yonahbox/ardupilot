@@ -84,6 +84,9 @@ void AP_MotorsHeli_RSC::output(RotorControlState state)
                     // Governor is not enabled - we should just passthrough the desired value
                     _control_output = _idle_output + (_rotor_ramp_output * (_desired_speed - _idle_output));
                     // hal.console->printf("Governor disabled: desired speed = %f, control output = %f\n", _desired_speed, _control_output);
+                } else if (fabs(_governor_rpm_setpoint - _rpm_feedback) < _governor_rpm_deadband) {
+                    // We are within the RPM deadband - no control action to be taken
+                    _control_output = last_control_output;
                 } else {
                     // throttle output based on closed-loop control using PID.
                     _control_output = calc_closed_loop_power_control_output();
@@ -165,10 +168,11 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
 }
 
 // set_gov_enable
-void AP_MotorsHeli_RSC::set_gov_enable(bool enabled, int16_t rpm, float rpm_feedback)
+void AP_MotorsHeli_RSC::set_gov_enable(bool enabled, int16_t rpm, int16_t deadband, float rpm_feedback)
 {
     _gov_enabled = enabled;
     _governor_rpm_setpoint = rpm;
+    _governor_rpm_deadband = deadband;
     _rpm_feedback = rpm_feedback;
 }
 

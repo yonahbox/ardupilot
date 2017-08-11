@@ -219,6 +219,15 @@ const AP_Param::GroupInfo AP_MotorsHeli::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("RSC_GV_RPM", 21, AP_MotorsHeli, _rsc_gov_rpm_setpoint, AP_MOTORS_HELI_RSC_GOV_RPM_SETPOINT),
 
+    // @Param: RSC_GOV_DB
+    // @DisplayName: Rotor Speed Controller Governor RPM Deadband
+    // @Description: Deadband for the target RPM - no control action will be taken +/- this amount around setpoint
+    // @Range: 0 - 5000
+    // @Units: RPM
+    // @Increment: 1
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_DB", 22, AP_MotorsHeli, _rsc_gov_rpm_db, 0),
+
 
     AP_GROUPEND
 };
