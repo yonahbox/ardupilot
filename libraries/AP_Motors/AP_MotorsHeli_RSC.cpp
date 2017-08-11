@@ -83,7 +83,7 @@ void AP_MotorsHeli_RSC::output(RotorControlState state)
                 if (!_gov_enabled) {
                     // Governor is not enabled - we should just passthrough the desired value
                     _control_output = _idle_output + (_rotor_ramp_output * (_desired_speed - _idle_output));
-                    hal.console->printf("Governor disabled: desired speed = %f, control output = %f\n", _desired_speed, _control_output);
+                    // hal.console->printf("Governor disabled: desired speed = %f, control output = %f\n", _desired_speed, _control_output);
                 } else {
                     // throttle output based on closed-loop control using PID.
                     _control_output = calc_closed_loop_power_control_output();
@@ -145,7 +145,7 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
 
     pid_output = constrain_float(pid_output, 0, 1);
 
-    float open_loop_output = calc_open_loop_power_control_output();
+    // float open_loop_output = calc_open_loop_power_control_output();
 
 
     /*hal.console->printf("Setpoint = %d, Target RPM: %f, ACTUAL: %f, Ramp = %f, Open Loop: %f, PID output: %f (%f %f %f)\n", _governor_rpm_setpoint, 

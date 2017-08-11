@@ -92,7 +92,7 @@ public:
 
     bool should_cutoff(uint8_t instance) const {
         // If the sensor itself is not healthy, or we disabled the cutoff - ignore request
-        if (!enabled(instance) || !healthy(instance) || _cutoff[instance] == -1) {
+        if (!enabled(instance) || !healthy(instance) || ((int)_cutoff[instance]) == -1) {
             return false;
         }
 
