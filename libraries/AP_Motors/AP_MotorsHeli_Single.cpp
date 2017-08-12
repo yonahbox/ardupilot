@@ -150,6 +150,13 @@ const AP_Param::GroupInfo AP_MotorsHeli_Single::var_info[] = {
     // @Range: 0 2000
     // @User: Standard
     AP_GROUPINFO("RSC_PWM_GV_MAX", 20, AP_MotorsHeli_Single, _main_rotor._pwm_gv_max, 2000),
+
+    // @Param: RSC_GV_PID_DIV
+    // @DisplayName: Divisor for Governor PID input
+    // @Description: This scales the error input for the governor PID controller
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_PID_DIV", 21, AP_MotorsHeli_Single, _main_rotor._governor_pid_divisor, 100),
     
     // parameters up to and including 29 are reserved for tradheli
 

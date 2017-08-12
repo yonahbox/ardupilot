@@ -122,6 +122,8 @@ private:
     AP_Int16        _pwm_gv_min;
     AP_Int16        _pwm_gv_max;
 
+    AP_Int32        _governor_pid_divisor;     // Divisor for error into Governor PID
+
     bool            _flag_governor_limit_pwm = false; // indicates if we have to limit the output PWM
     
     // update_rotor_ramp - slews rotor output scalar between 0 and 1, outputs float scalar to _rotor_ramp_output

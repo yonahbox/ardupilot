@@ -140,7 +140,7 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
     float target_rpm;            // target rpm is ramped
 
     target_rpm = _rotor_ramp_output * _governor_rpm_setpoint;
-    float pid_input = (target_rpm - _rpm_feedback) / 100.0f;
+    float pid_input = (target_rpm - _rpm_feedback) / _governor_pid_divisor;
 
     if (_gov_enabled){
         _pid_rotor_gov->set_input_filter_all(pid_input);
