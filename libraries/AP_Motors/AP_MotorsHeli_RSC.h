@@ -23,6 +23,13 @@ enum RotorControlMode {
     ROTOR_CONTROL_MODE_GOVERNOR
 };
 
+// rotor control modes
+enum OpenLoopControlMode {
+    OPEN_LOOP_CONTROL_MODE_DISABLED = 0,
+    OPEN_LOOP_CONTROL_MODE_LINEAR,
+    OPEN_LOOP_CONTROL_MODE_QUADRATIC
+};
+
 class AP_MotorsHeli_RSC {
 public:
     friend class AP_MotorsHeli_Single;
@@ -123,6 +130,13 @@ private:
     AP_Int16        _pwm_gv_max;
 
     AP_Int32        _governor_pid_divisor;     // Divisor for error into Governor PID
+
+    AP_Float        _open_a;                   // A term in Ax^2 + Bx + C open loop controller
+    AP_Float        _open_b;                   // B term in Ax^2 + Bx + C open loop controller
+    AP_Float        _open_neg_a;                   // A term in Ax^2 + Bx + C open loop controller
+    AP_Float        _open_neg_b;                   // B term in Ax^2 + Bx + C open loop controller
+    AP_Float        _open_c;                   // C term in Ax^2 + Bx + C open loop controller. Equivalent function to H_RSC_POWER_LOW.
+    AP_Int8         _open_mode;                // Open Loop controller mode, 0 - Linear, 1 - Quadratic
 
     bool            _flag_governor_limit_pwm = false; // indicates if we have to limit the output PWM
     

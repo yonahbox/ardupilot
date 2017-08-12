@@ -117,13 +117,31 @@ float AP_MotorsHeli_RSC::calc_open_loop_power_control_output()
 
     float open_loop_power_control_output = 0.0;
 
-    if (_load_feedforward >= 0) {
-        float range = _power_output_high - _power_output_low;
-        open_loop_power_control_output = _idle_output + (_rotor_ramp_output * ((_power_output_low - _idle_output) + (range * _load_feedforward)));
-    } else {
-        float range = _power_output_negc - _power_output_low;
-        open_loop_power_control_output = _idle_output + (_rotor_ramp_output * ((_power_output_low - _idle_output) - (range * _load_feedforward)));
+    if (_open_mode == OPEN_LOOP_CONTROL_MODE_DISABLED) {
+        return 0.0;
     }
+    else if (_open_mode == OPEN_LOOP_CONTROL_MODE_LINEAR) {
+        if (_load_feedforward >= 0) {
+            float range = _power_output_high - _power_output_low;
+            open_loop_power_control_output = _idle_output + (_rotor_ramp_output * ((_power_output_low - _idle_output) + (range * _load_feedforward)));
+        } else {
+            float range = _power_output_negc - _power_output_low;
+            open_loop_power_control_output = _idle_output + (_rotor_ramp_output * ((_power_output_low - _idle_output) - (range * _load_feedforward)));
+        }
+    } else if (_open_mode == OPEN_LOOP_CONTROL_MODE_QUADRATIC) {
+        if (_load_feedforward >= 0) {
+            open_loop_power_control_output = \
+                (_open_a * _load_feedforward * _load_feedforward) + \
+                (_open_b * _load_feedforward) + \
+                _open_c;
+        } else {
+            open_loop_power_control_output = \
+                (_open_neg_a * _load_feedforward * _load_feedforward) - \
+                (_open_neg_b * _load_feedforward) + \
+                _open_c;
+        }
+    }
+
 
     open_loop_power_control_output = constrain_float(open_loop_power_control_output, 0, 1);
     // throttle output depending on estimated power demand. Output is ramped up from idle speed during rotor runup.

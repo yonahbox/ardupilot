@@ -157,6 +157,47 @@ const AP_Param::GroupInfo AP_MotorsHeli_Single::var_info[] = {
     // @Range: 0 2000
     // @User: Standard
     AP_GROUPINFO("RSC_GV_PID_DIV", 21, AP_MotorsHeli_Single, _main_rotor._governor_pid_divisor, 100),
+
+    // @Param: RSC_GV_OPEN_A
+    // @DisplayName: Scale factor (A) for open loop
+    // @Description: A term in Ax^2 + Bx + C open loop controller
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_OPEN_A", 22, AP_MotorsHeli_Single, _main_rotor._open_a, 0),
+
+    // @Param: RSC_GV_OPEN_B
+    // @DisplayName: Scale factor (B) for open loop
+    // @Description: B term in Ax^2 + Bx + C open loop controller
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_OPEN_B", 23, AP_MotorsHeli_Single, _main_rotor._open_b, 0),
+
+    // @Param: RSC_GV_OPEN_C
+    // @DisplayName: Constant factor (C) for open loop
+    // @Description: C term in Ax^2 + Bx + C open loop controller. Equivalent function to H_RSC_POWER_LOW.
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_OPEN_C", 24, AP_MotorsHeli_Single, _main_rotor._open_c, 0),
+
+    // @Param: RSC_GV_OPEN_MODE
+    // @DisplayName: Open Loop controller mode
+    // @Description: 0: Disabled, 1: Linear 2: Quadratic
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_OPEN_MD", 25, AP_MotorsHeli_Single, _main_rotor._open_mode, 0),
+
+    // @Param: RSC_GV_OPEN_NA
+    // @DisplayName: Negative collective scale factor (A) for open loop
+    // @Description: A term in Ax^2 + Bx + C open loop controller
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_OPEN_NA", 26, AP_MotorsHeli_Single, _main_rotor._open_neg_a, 0),
+
+    // @Param: RSC_GV_OPEN_NB
+    // @DisplayName: Negative collective scale factor (B) for open loop
+    // @Description: B term in Ax^2 + Bx + C open loop controller
+    // @Range: 0 2000
+    // @User: Standard
+    AP_GROUPINFO("RSC_GV_OPEN_NB", 27, AP_MotorsHeli_Single, _main_rotor._open_neg_b, 0),
     
     // parameters up to and including 29 are reserved for tradheli
 
