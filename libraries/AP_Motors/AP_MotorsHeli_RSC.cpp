@@ -124,6 +124,8 @@ float AP_MotorsHeli_RSC::calc_open_loop_power_control_output()
         float range = _power_output_negc - _power_output_low;
         open_loop_power_control_output = _idle_output + (_rotor_ramp_output * ((_power_output_low - _idle_output) - (range * _load_feedforward)));
     }
+
+    open_loop_power_control_output = constrain_float(open_loop_power_control_output, 0, 1);
     // throttle output depending on estimated power demand. Output is ramped up from idle speed during rotor runup.
     return open_loop_power_control_output;
 }
@@ -141,7 +143,7 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
     float pid_input = (target_rpm - _rpm_feedback) / 100.0f;
 
     if (_gov_enabled){
-        _pid_rotor_gov->set_input_filter_all(pid_input/*target_rpm - _rpm_feedback*/);
+        _pid_rotor_gov->set_input_filter_all(pid_input);
         pid_output = _pid_rotor_gov->get_pid();
     } else {
         _pid_rotor_gov->set_input_filter_all(0);
@@ -150,8 +152,8 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
 
     pid_output = constrain_float(pid_output, 0, 1);
 
-    // float open_loop_output = calc_open_loop_power_control_output();
-
+    float open_loop_output = calc_open_loop_power_control_output();
+    float final_output = constrain_float(pid_output + open_loop_output, 0, 1);
 
     /*hal.console->printf("Setpoint = %d, Target RPM: %f, ACTUAL: %f, Ramp = %f, Open Loop: %f, PID output: %f (%f %f %f)\n", _governor_rpm_setpoint, 
     target_rpm, 
@@ -166,7 +168,7 @@ float AP_MotorsHeli_RSC::calc_closed_loop_power_control_output()
     */
     
     // total control output is sum of basic open loop control output plus PI contribution
-    return /*open_loop_output +*/ pid_output;
+    return final_output;
 }
 
 // set_gov_enable
