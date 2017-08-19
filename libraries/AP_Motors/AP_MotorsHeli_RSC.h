@@ -27,7 +27,7 @@ enum RotorControlMode {
 enum OpenLoopControlMode {
     OPEN_LOOP_CONTROL_MODE_DISABLED = 0,
     OPEN_LOOP_CONTROL_MODE_LINEAR,
-    OPEN_LOOP_CONTROL_MODE_QUADRATIC
+    OPEN_LOOP_CONTROL_MODE_POLYNOMIAL
 };
 
 class AP_MotorsHeli_RSC {
@@ -131,12 +131,21 @@ private:
 
     AP_Int32        _governor_pid_divisor;     // Divisor for error into Governor PID
 
-    AP_Float        _open_a;                   // A term in Ax^2 + Bx + C open loop controller
-    AP_Float        _open_b;                   // B term in Ax^2 + Bx + C open loop controller
-    AP_Float        _open_neg_a;                   // A term in Ax^2 + Bx + C open loop controller
-    AP_Float        _open_neg_b;                   // B term in Ax^2 + Bx + C open loop controller
-    AP_Float        _open_c;                   // C term in Ax^2 + Bx + C open loop controller. Equivalent function to H_RSC_POWER_LOW.
-    AP_Int8         _open_mode;                // Open Loop controller mode, 0 - Linear, 1 - Quadratic
+    // Positive load parameters
+    AP_Float        _open_a;                   // A term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_b;                   // B term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_c;                   // C term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_d;                   // D term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_e;                   // E term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+
+    // Negative load parameters
+    AP_Float        _open_neg_a;               // A term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_neg_b;               // B term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_neg_c;               // C term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_neg_d;               // D term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+    AP_Float        _open_neg_e;               // E term in Ax^4 + Bx^3 + Cx^2 + Dx + E open loop controller
+
+    AP_Int8         _open_mode;                // Open Loop controller mode, 0 - Disabled, 1 - Linear, 2 - Polynomial
 
     bool            _flag_governor_limit_pwm = false; // indicates if we have to limit the output PWM
     

@@ -128,17 +128,21 @@ float AP_MotorsHeli_RSC::calc_open_loop_power_control_output()
             float range = _power_output_negc - _power_output_low;
             open_loop_power_control_output = _idle_output + (_rotor_ramp_output * ((_power_output_low - _idle_output) - (range * _load_feedforward)));
         }
-    } else if (_open_mode == OPEN_LOOP_CONTROL_MODE_QUADRATIC) {
+    } else if (_open_mode == OPEN_LOOP_CONTROL_MODE_POLYNOMIAL) {
         if (_load_feedforward >= 0) {
             open_loop_power_control_output = \
-                (_open_a * _load_feedforward * _load_feedforward) + \
-                (_open_b * _load_feedforward) + \
-                _open_c;
+                (_open_a * _load_feedforward * _load_feedforward * _load_feedforward * _load_feedforward) + \
+                (_open_b * _load_feedforward * _load_feedforward * _load_feedforward) + \
+                (_open_c * _load_feedforward * _load_feedforward) + \
+                (_open_d * _load_feedforward) + \
+                _open_e;
         } else {
             open_loop_power_control_output = \
-                (_open_neg_a * _load_feedforward * _load_feedforward) - \
-                (_open_neg_b * _load_feedforward) + \
-                _open_c;
+                (_open_neg_a * _load_feedforward * _load_feedforward * _load_feedforward * _load_feedforward) - \
+                (_open_neg_b * _load_feedforward * _load_feedforward * _load_feedforward) + \
+                (_open_neg_c * _load_feedforward * _load_feedforward) - \
+                (_open_neg_d * _load_feedforward) + \
+                _open_neg_e;
         }
     }
 
