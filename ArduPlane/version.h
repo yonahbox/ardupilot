@@ -2,7 +2,10 @@
 
 #include "ap_version.h"
 
-#define THISFIRMWARE "ArduPlane V3.8.4-Yonah-LightwareI2C-YanHan"
+
+#define THISFIRMWARE "ArduPlane V3.8.4-Yonah-LightwareI2C-Joseph"
+
+
 #define FIRMWARE_VERSION 3,8,4,FIRMWARE_VERSION_TYPE_OFFICIAL
 
 #ifndef GIT_VERSION
