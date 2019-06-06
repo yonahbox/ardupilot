@@ -2,13 +2,15 @@
 
 This set of instructions shows how to compile custom Ardupilot firmware to be tested in SITL. There are three steps: (1) Compile the firmware, (2) Launch SITL, (3) Connect MAVProxy to SITL
 
-The instructions are tailored to Yonah's use case: Running quadplane AUTO testing at locations such as Kompiam Airfield.
+The instructions are tailored to Yonah's use case: Running quadplane AUTO testing at locations such as Kompiam Airfield, within a Linux environment
 
 ## 1. Compiling
 
 Navigate to your ardupilot repository folder, i.e. `cd <path to ardupilot repository>`
 
-Before compiling, make sure the submodules are up to date. This is important if you have recently switch to a new branches, and there are updates to the submodules:
+Before compiling, ensure you have followed the steps to [set up the build environment within Linux](http://ardupilot.org/dev/docs/building-setup-linux.html).
+
+In particular, make sure the submodules are up to date. This is important if you have recently switch to a new branches, and there are updates to the submodules:
 
 ```sh
 git submodule update --init --recursive
